@@ -1,4 +1,4 @@
-package com.tempproject
+package com.taskNChoresMobile
 
 import android.app.Application
 import com.facebook.react.PackageList
