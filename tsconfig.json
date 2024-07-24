@@ -12,7 +12,7 @@
     "noEmit": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "App.tsx"],
   "exclude": ["node_modules", "**/*.spec.ts"],
   "extends": "@react-native/typescript-config/tsconfig.json"
 
