@@ -4,4 +4,7 @@ export type RootStackParamList = {
   Drawer: undefined;
   Login: undefined;
   Registration: undefined;
+  Search: undefined;
+  Inbox: undefined;
+  TabNavigator: undefined;
 };
