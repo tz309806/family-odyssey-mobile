@@ -2,7 +2,11 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faHouseChimney, faMagnifyingGlassLocation, faInbox} from '@fortawesome/free-solid-svg-icons';
+import {
+  faHouseChimney,
+  faMagnifyingGlassLocation,
+  faInbox,
+} from '@fortawesome/free-solid-svg-icons';
 import Home from '../screens/Home/Home';
 import Search from '../screens/Search/Search.tsx';
 import Inbox from '../screens/Inbox/Inbox.tsx';

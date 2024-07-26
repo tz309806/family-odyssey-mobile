@@ -13,17 +13,26 @@ import {faSignOut} from '@fortawesome/free-solid-svg-icons';
 import TabNavigator from './TabNavigation.tsx';
 import Search from '../screens/Search/Search.tsx';
 import Inbox from '../screens/Inbox/Inbox.tsx';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator();
 
 export const MainNavigation = () => {
-  return <TabNavigator />;
+  return (
+    <Drawer.Navigator
+      drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Search" component={Search} />
+      <Drawer.Screen name="Inbox" component={Inbox} />
+    </Drawer.Navigator>
+  );
 };
 
 export const NonAuthenticated = () => {
   return (
     <Stack.Navigator
-      initialRouteName="TabNavigator"
+      initialRouteName="Login"
       screenOptions={{header: () => null, headerShown: false}}>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
