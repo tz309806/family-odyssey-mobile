@@ -19,20 +19,20 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 const Home = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Login')} // Navigate to Signup
-          style={styles.iconContainer}>
-          <Image
-            source={require('../../assets/icons/user-icon.png')} // Adjust the path to your user icon image
-            style={styles.userIcon}
-          />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <TouchableOpacity
+  //         onPress={() => navigation.navigate('Login')} // Navigate to Signup
+  //         style={styles.iconContainer}>
+  //         <Image
+  //           source={require('../../assets/icons/user-icon.png')} // Adjust the path to your user icon image
+  //           style={styles.userIcon}
+  //         />
+  //       </TouchableOpacity>
+  //     ),
+  //   });
+  // }, [navigation]);
 
   const data = [
     {id: 1, text: 'https://google.com'},

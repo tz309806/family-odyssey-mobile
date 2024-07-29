@@ -1,12 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   SafeAreaView,
   TextInput,
-  Button,
   Text,
-  View,
-  StyleSheet,
   Pressable,
+  Button,
+  Alert,
 } from 'react-native';
 import {
   GoogleSigninButton,
@@ -16,22 +15,46 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/route-types';
 import style from './style.ts';
-
+import {signIn} from '../../services/authService';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'Signup'
+  'Login'
 >;
 
 type Props = {
   navigation: ProfileScreenNavigationProp;
 };
 
-const Login = ({navigation}: Props) => {
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: 'YOUR_WEB_CLIENT_ID', // replace with your web client ID
-    });
-  }, []);
+const Login = ({setUser}: {setUser: (user: any) => void}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+  // useEffect(() => {
+  //   GoogleSignin.configure({
+  //     webClientId: 'YOUR_WEB_CLIENT_ID', // replace with your web client ID
+  //   });
+  // }, []);
+
+  const handleSignIn = async () => {
+    try {
+      const user = await signIn(email, password);
+      console.log('User signed in: ', user);
+      setUser(user); // Update the user state in the App component
+      // Alert.alert('Success', 'Signed in successfully');
+      // Navigate to the Tabs navigator
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Tabs', params: {tab: 'Home'}}],
+      });
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        error.response?.data?.error || 'Something went wrong',
+      );
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -51,14 +74,28 @@ const Login = ({navigation}: Props) => {
     }
   };
 
+  useEffect(() => {
+    setEmail('tz309806@gmail.com');
+    setPassword('T64220866s!');
+  }, []);
+
   return (
     <SafeAreaView style={style.container}>
       <TextInput
         style={style.input}
-        placeholder="email"
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
         keyboardType="email-address"
       />
-      <TextInput style={style.input} placeholder="password" secureTextEntry />
+      <TextInput
+        style={style.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Button title="Sign In" onPress={handleSignIn} />
       <GoogleSigninButton
         style={style.googleButton}
         size={GoogleSigninButton.Size.Wide}

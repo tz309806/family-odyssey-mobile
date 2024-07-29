@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {SafeAreaView, TextInput, Button, Text} from 'react-native';
+import {SafeAreaView, TextInput, Button, Text, Alert} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/route-types.ts';
 import style from './style';
+import {signUp} from '../../services/authService';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -20,13 +21,23 @@ const Signup = ({navigation}: Props) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignup = () => {
-    console.log('Sign Up button tapped');
-    console.log(`First Name: ${firstName}`);
-    console.log(`Last Name: ${lastName}`);
-    console.log(`Email: ${email}`);
-    console.log(`Password: ${password}`);
-    console.log(`Confirm Password: ${confirmPassword}`);
+  const handleSignup = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    try {
+      await signUp(email, password);
+      Alert.alert('Success', 'User registered successfully');
+      navigation.navigate('Home'); // Redirect to home or login screen
+    } catch (error) {
+      console.log('ERROR: ', error);
+      Alert.alert(
+        'Error',
+        error.response?.data?.error || 'Something went wrong',
+      );
+    }
   };
 
   return (
