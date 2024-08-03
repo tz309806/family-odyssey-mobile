@@ -1,4 +1,4 @@
-package com.taskNChoresMobile
+package com.odyssey.family
 
 import android.app.Application
 import com.facebook.react.PackageList

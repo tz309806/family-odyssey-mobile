@@ -38,9 +38,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.taskNChoresMobile"
+    namespace "com.odyssey.family"
     defaultConfig {
-        applicationId "com.taskNChoresMobile"
+        applicationId "com.odyssey.family"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -50,7 +50,7 @@ android {
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
-            keyAlias 'androiddebugkey'
+            keyAlias 'my-debug-keystore'
             keyPassword 'android'
         }
     }

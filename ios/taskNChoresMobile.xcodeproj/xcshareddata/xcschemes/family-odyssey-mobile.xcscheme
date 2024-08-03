@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "taskNChoresMobile.app"
-               BlueprintName = "taskNChoresMobile"
-               ReferencedContainer = "container:taskNChoresMobile.xcodeproj">
+               BuildableName = "family-odyssey-mobile.app"
+               BlueprintName = "family-odyssey-mobile"
+               ReferencedContainer = "container:family-odyssey-mobile.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "taskNChoresMobileTests.xctest"
-               BlueprintName = "taskNChoresMobileTests"
-               ReferencedContainer = "container:taskNChoresMobile.xcodeproj">
+               BuildableName = "family-odyssey-mobileTests.xctest"
+               BlueprintName = "family-odyssey-mobileTests"
+               ReferencedContainer = "container:family-odyssey-mobile.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "taskNChoresMobile.app"
-            BlueprintName = "taskNChoresMobile"
-            ReferencedContainer = "container:taskNChoresMobile.xcodeproj">
+            BuildableName = "family-odyssey-mobile.app"
+            BlueprintName = "family-odyssey-mobile"
+            ReferencedContainer = "container:family-odyssey-mobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "taskNChoresMobile.app"
-            BlueprintName = "taskNChoresMobile"
-            ReferencedContainer = "container:taskNChoresMobile.xcodeproj">
+            BuildableName = "family-odyssey-mobile.app"
+            BlueprintName = "family-odyssey-mobile"
+            ReferencedContainer = "container:family-odyssey-mobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

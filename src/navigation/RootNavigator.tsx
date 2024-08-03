@@ -9,6 +9,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome, faSearch, faInbox} from '@fortawesome/free-solid-svg-icons';
 import Login from '../screens/Login/Login.tsx';
 import {NavigationContainer} from '@react-navigation/native';
+import {useAppContext} from '../AppContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,7 +42,9 @@ const TabNavigator = () => {
   );
 };
 
-const AuthStack = ({setUser}: {setUser: (user: any) => void}) => {
+const AuthStack = () => {
+  const {setUser} = useAppContext();
+
   return (
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen name="Login">
@@ -52,13 +55,9 @@ const AuthStack = ({setUser}: {setUser: (user: any) => void}) => {
   );
 };
 
-const RootNavigator = ({
-  user,
-  setUser,
-}: {
-  user: any;
-  setUser: (user: any) => void;
-}) => {
+const RootNavigator = () => {
+  const {user, setUser} = useAppContext();
+
   return (
     <NavigationContainer>
       {user ? (
@@ -71,7 +70,7 @@ const RootNavigator = ({
           <Stack.Screen name="Home" component={Home} />
         </Stack.Navigator>
       ) : (
-        <AuthStack setUser={setUser} />
+        <AuthStack />
       )}
     </NavigationContainer>
   );

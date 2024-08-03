@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useCallback} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -8,31 +8,49 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Button,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useFocusEffect} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/route-types.ts';
+import {clearSession, getSession} from '../../services/authService';
+import {supabase} from '../../supabaseClient';
+import {useAppContext} from "../../AppContext.tsx";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+
 const Home = () => {
+
+  const {user, setUser} = useAppContext()
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <TouchableOpacity
-  //         onPress={() => navigation.navigate('Login')} // Navigate to Signup
-  //         style={styles.iconContainer}>
-  //         <Image
-  //           source={require('../../assets/icons/user-icon.png')} // Adjust the path to your user icon image
-  //           style={styles.userIcon}
-  //         />
-  //       </TouchableOpacity>
-  //     ),
-  //   });
-  // }, [navigation]);
+  // Handle sign out functionality
+  const handleSignOut = async () => {
+    const {error} = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error signing out:', error);
+    } else {
+      await clearSession();
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const logUserSession = async () => {
+        const session = await getSession();
+        console.log('Logged in user:', user);
+      };
+
+      logUserSession();
+    }, []),
+  );
 
   const data = [
     {id: 1, text: 'https://google.com'},
@@ -42,6 +60,7 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Button title="Sign Out" onPress={handleSignOut} />
       <FlatList
         data={data}
         keyExtractor={item => item.id.toString()}

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   TextInput,
@@ -15,9 +15,16 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/route-types';
 import style from './style.ts';
-import {signIn} from '../../services/authService';
-import {CommonActions, useFocusEffect} from '@react-navigation/native';
+import {
+  checkUserSession,
+  storeSession,
+  clearSession,
+  signIn,
+  signInWithGoogle,
+} from '../../services/authService';
 import {useNavigation} from '@react-navigation/native';
+import {supabase} from '../../supabaseClient.js';
+
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Login'
@@ -31,19 +38,34 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
-  // useEffect(() => {
-  //   GoogleSignin.configure({
-  //     webClientId: 'YOUR_WEB_CLIENT_ID', // replace with your web client ID
-  //   });
-  // }, []);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: ['profile', 'email'],
+      webClientId: process.env.GOOGLE_CLIENT_ID, // replace with your Android client ID
+    });
+    checkUserSessionOnLoad();
+  }, []);
+
+  const checkUserSessionOnLoad = async () => {
+    const sessionUser = await checkUserSession();
+    console.log('checkUserSessionOnLoad ', sessionUser);
+    if (sessionUser) {
+      setUser(sessionUser);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Tabs', params: {tab: 'Home'}}],
+      });
+    }
+  };
 
   const handleSignIn = async () => {
     try {
-      const user = await signIn(email, password);
-      console.log('User signed in: ', user);
-      setUser(user); // Update the user state in the App component
-      // Alert.alert('Success', 'Signed in successfully');
-      // Navigate to the Tabs navigator
+      const response = await signIn(email, password);
+      const session = response.data.session;
+      await storeSession(session);
+      console.log('handleSignIn session object', session);
+      setUser(session.user);
       navigation.reset({
         index: 0,
         routes: [{name: 'Tabs', params: {tab: 'Home'}}],
@@ -60,8 +82,28 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-    } catch (error) {
+      console.log('GoogleSignin USERINFO:', userInfo);
+
+      if (userInfo.idToken) {
+        const {data, error} = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: userInfo.idToken,
+        });
+        if (error) {
+          console.error('Supabase sign-in error:', error);
+          throw new Error(error.message);
+        }
+        console.log('handleGoogleSignIn Supabase User data:', data);
+        await storeSession(data.session);
+        setUser(data.session.user);
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Tabs', params: {tab: 'Home'}}],
+        });
+      } else {
+        throw new Error('No ID token present!');
+      }
+    } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('User cancelled the login flow');
       } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -69,15 +111,25 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log('Play services not available or outdated');
       } else {
-        console.log('Some other error happened:', error);
+        console.error('Some other error happened:', error);
+        Alert.alert('Error', error.message || 'Something went wrong');
       }
     }
   };
 
-  useEffect(() => {
-    setEmail('tz309806@gmail.com');
-    setPassword('T64220866s!');
-  }, []);
+  const handleSignOut = async () => {
+    const {error} = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error signing out:', error);
+    } else {
+      await clearSession();
+      setUser(null);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
+    }
+  };
 
   return (
     <SafeAreaView style={style.container}>
@@ -105,6 +157,7 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
       <Pressable onPress={() => navigation.navigate('Signup')}>
         <Text style={style.signupText}>Go to Sign Up</Text>
       </Pressable>
+      <Button title="Sign Out" onPress={handleSignOut} />
     </SafeAreaView>
   );
 };
