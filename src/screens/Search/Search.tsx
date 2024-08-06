@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView, Text} from 'react-native';
-import MapScreen from '../../components/mapboxComponent.tsx';
+import MapScreen from '../../components/MapboxComponent.tsx';
 
 const Search = () => {
   return (
