@@ -1,21 +1,47 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import MapboxGL from '@rnmapbox/maps';
+import React, {useEffect} from 'react';
+import {View, StyleSheet, SafeAreaView, Text} from 'react-native';
+import MapboxGL, {MapView} from '@rnmapbox/maps';
+import Mapbox from '@rnmapbox/maps';
 
 const MapScreen = () => {
+  useEffect(() => {
+    // Enable logging
+    MapboxGL.setAccessToken(process.env.MAPBOX_TOKEN).then(res => {
+      console.log('sdasdfsfsdf0', process.env.MAPBOX_TOKEN);
+    });
+  }, []);
   return (
-    <View style={styles.container}>
-      <MapboxGL.MapView style={styles.map}>
-        <MapboxGL.Camera zoomLevel={8} centerCoordinate={[-74.006, 40.7128]} />
-      </MapboxGL.MapView>
-    </View>
+    <SafeAreaView>
+      <Text>THIS IS SEARCH PAGE</Text>
+      {/*<View style={styles.page}>*/}
+      {/*  <View style={styles.container}>*/}
+      {/*    <MapView style={styles.map} />*/}
+      {/*  </View>*/}
+      {/*</View>*/}
+      <View style={styles.page}>
+        <View style={styles.container}>
+          <Mapbox.MapView style={styles.map} />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  page: {
     flex: 1,
+
+    justifyContent: 'center',
+
+    alignItems: 'center',
   },
+
+  container: {
+    height: 300,
+
+    width: 300,
+  },
+
   map: {
     flex: 1,
   },
