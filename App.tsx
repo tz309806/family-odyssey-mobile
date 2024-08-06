@@ -5,17 +5,22 @@ import {Text, View} from 'react-native';
 import RootNavigator from './src/navigation/RootNavigator';
 import {checkUserSession, onAuthStateChange} from './src/services/authService';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {AppProvider, useAppContext} from './src/AppContext.tsx';
+import {AppProvider, useAppContext} from './src/AppContext';
+import MapboxGL from '@rnmapbox/maps';
 
 const AppContent: React.FC = () => {
   const {setUser} = useAppContext();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Configure Google Sign-In
     GoogleSignin.configure({
-      webClientId: process.env.GOOGLE_CLIENT_ID, // replace with your Android client ID
+      webClientId: process.env.GOOGLE_CLIENT_ID, // Ensure this matches your configuration
     });
 
+    // Set Mapbox Access Token
+    const mapBoxRes = MapboxGL.setAccessToken(process.env.MAPBOX_TOKEN); // Ensure the token is loaded correctly
+    console.log('UUUUUUU', mapBoxRes);
     const fetchUser = async () => {
       const currentUser = await checkUserSession();
       setUser(currentUser);
@@ -36,9 +41,9 @@ const AppContent: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Loading...</Text>
-      </View>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Loading...</Text>
+        </View>
     );
   }
 
@@ -47,9 +52,9 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
   );
 };
 
