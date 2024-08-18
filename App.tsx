@@ -13,7 +13,8 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: process.env.GOOGLE_CLIENT_ID, // replace with your Android client ID
+      webClientId: process.env.GOOGLE_CLIENT_ID,
+      iosClientId: process.env.IOS_CLIENT_ID,
     });
 
     const fetchUser = async () => {

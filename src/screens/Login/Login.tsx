@@ -20,10 +20,9 @@ import {
   storeSession,
   clearSession,
   signIn,
-  signInWithGoogle,
 } from '../../services/authService';
 import {useNavigation} from '@react-navigation/native';
-import {supabase} from '../../supabaseClient.js';
+import {supabase} from '../../supabaseClient.ts';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -42,7 +41,8 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['profile', 'email'],
-      webClientId: process.env.GOOGLE_CLIENT_ID, // replace with your Android client ID
+      webClientId: process.env.GOOGLE_CLIENT_ID,
+      iosClientId: process.env.IOS_CLIENT_ID,
     });
     checkUserSessionOnLoad();
   }, []);
