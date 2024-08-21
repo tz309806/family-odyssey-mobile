@@ -85,6 +85,7 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
       console.log('GoogleSignin USERINFO:', userInfo);
 
       if (userInfo.idToken) {
+
         const {data, error} = await supabase.auth.signInWithIdToken({
           provider: 'google',
           token: userInfo.idToken,
