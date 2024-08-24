@@ -9,4 +9,6 @@ export type RootStackParamList = {
   TabNavigator: undefined;
   Signup: undefined;
   Tabs: undefined;
+  Settings: undefined;
+  'Edit Profile': undefined;
 };

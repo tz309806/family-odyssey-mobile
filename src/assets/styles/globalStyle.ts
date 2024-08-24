@@ -34,16 +34,22 @@ const globalStyle = StyleSheet.create({
     fontFamily: getFontFamily('Inter', '600'),
   },
   pageBackground: {
-    backgroundColor: '#ece0d1',
+    backgroundColor: 'white',
   },
   marginBottom24: {
     marginBottom: verticalScale(24),
+  },
+  marginBottom10: {
+    marginBottom: verticalScale(10),
   },
   marginTop24: {
     marginTop: verticalScale(24),
   },
   margin10: {
     margin: horizontalScale(10),
+  },
+  marginLeft10: {
+    marginLeft: horizontalScale(10),
   },
   flexGrow: {
     flexGrow: 1,

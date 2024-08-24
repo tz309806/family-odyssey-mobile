@@ -3,36 +3,26 @@ import 'react-native-url-polyfill/auto';
 import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import RootNavigator from './src/navigation/RootNavigator';
-import {checkUserSession, onAuthStateChange} from './src/services/authService';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {AppProvider, useAppContext} from './src/AppContext.tsx';
+import {supabase} from './src/supabaseClient.ts';
 
-const AppContent: React.FC = () => {
+const AppContent = () => {
   const {setUser} = useAppContext();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: process.env.GOOGLE_CLIENT_ID,
-      iosClientId: process.env.IOS_CLIENT_ID,
-    });
-
-    const fetchUser = async () => {
-      const currentUser = await checkUserSession();
-      setUser(currentUser);
-      console.log('USER: ', currentUser);
+    supabase.auth.getSession().then(({data: {session}}) => {
+      if (session) {
+        setUser(session.user);
+      }
       setLoading(false);
-    };
-
-    fetchUser();
-
-    const {subscription} = onAuthStateChange(newUser => {
-      setUser(newUser);
     });
 
-    return () => {
-      subscription?.unsubscribe();
-    };
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setUser(session.user);
+      }
+    });
   }, []);
 
   if (loading) {
@@ -46,7 +36,7 @@ const AppContent: React.FC = () => {
   return <RootNavigator />;
 };
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <AppProvider>
       <AppContent />
