@@ -2,10 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   TextInput,
-  Text,
   Pressable,
-  Button,
   Alert,
+  Platform,
+  ScrollView,
+  View,
+  Text,
 } from 'react-native';
 import {
   GoogleSigninButton,
@@ -15,15 +17,11 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/route-types';
 import style from './style.ts';
-import {
-  checkUserSession,
-  storeSession,
-  clearSession,
-  signIn,
-  signInWithGoogle,
-} from '../../services/authService';
-import {useNavigation} from '@react-navigation/native';
-import {supabase} from '../../supabaseClient.js';
+import {checkUserSession, storeSession} from '../../services/authService';
+import {supabase} from '../../supabaseClient.ts';
+import globalStyle from '../../assets/styles/globalStyle.ts';
+import Title from '../../components/Title/Title.tsx';
+import Button from '../../components/Button/Button.tsx';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -32,50 +30,54 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
 
 type Props = {
   navigation: ProfileScreenNavigationProp;
+  setUser: (user: any) => void;
 };
 
-const Login = ({setUser}: {setUser: (user: any) => void}) => {
+const Login = (props: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation();
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['profile', 'email'],
-      webClientId: process.env.GOOGLE_CLIENT_ID, // replace with your Android client ID
+      webClientId: process.env.GOOGLE_CLIENT_ID,
+      iosClientId: '',
     });
     checkUserSessionOnLoad();
-  }, []);
+  });
 
   const checkUserSessionOnLoad = async () => {
     const sessionUser = await checkUserSession();
-    console.log('checkUserSessionOnLoad ', sessionUser);
     if (sessionUser) {
-      setUser(sessionUser);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Tabs', params: {tab: 'Home'}}],
-      });
+      props.setUser(sessionUser);
     }
   };
 
   const handleSignIn = async () => {
-    try {
-      const response = await signIn(email, password);
-      const session = response.data.session;
-      await storeSession(session);
-      console.log('handleSignIn session object', session);
-      setUser(session.user);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Tabs', params: {tab: 'Home'}}],
+    setErrorMessage('');
+    console.log(password);
+    if (email.length < 2 || password.length < 8) {
+      setErrorMessage('Invalid email or password');
+    } else {
+      const {error} = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
       });
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        error.response?.data?.error || 'Something went wrong',
-      );
+
+      if (error) setErrorMessage('Invalid email or password');
     }
+
+    // try {
+    //   const response = await signIn(email, password);
+    //   const session = response.data.session;
+    //   await storeSession(session);
+    //   console.log('handleSignIn session object', session);
+    //   props.setUser(session.user);
+    // } catch (error: any) {
+    //   setErrorMessage('Invalid email or password');
+    // }
+    //}
   };
 
   const handleGoogleSignIn = async () => {
@@ -95,11 +97,7 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
         }
         console.log('handleGoogleSignIn Supabase User data:', data);
         await storeSession(data.session);
-        setUser(data.session.user);
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Tabs', params: {tab: 'Home'}}],
-        });
+        props.setUser(data.session.user);
       } else {
         throw new Error('No ID token present!');
       }
@@ -117,47 +115,61 @@ const Login = ({setUser}: {setUser: (user: any) => void}) => {
     }
   };
 
-  const handleSignOut = async () => {
-    const {error} = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error signing out:', error);
-    } else {
-      await clearSession();
-      setUser(null);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Login'}],
-      });
-    }
-  };
-
   return (
-    <SafeAreaView style={style.container}>
-      <TextInput
-        style={style.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={style.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Sign In" onPress={handleSignIn} />
-      <GoogleSigninButton
-        style={style.googleButton}
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={handleGoogleSignIn}
-      />
-      <Pressable onPress={() => navigation.navigate('Signup')}>
-        <Text style={style.signupText}>Go to Sign Up</Text>
-      </Pressable>
-      <Button title="Sign Out" onPress={handleSignOut} />
+    <SafeAreaView style={[globalStyle.flex, globalStyle.pageBackground]}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={style.container}>
+        <View style={globalStyle.marginBottom24}>
+          <TextInput
+            style={style.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+        <View style={globalStyle.marginBottom10}>
+          <TextInput
+            style={style.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            autoCapitalize="none"
+            secureTextEntry={true}
+          />
+        </View>
+        {errorMessage !== '' && (
+          <Text style={[style.error, globalStyle.marginBottom24]}>
+            {errorMessage}
+          </Text>
+        )}
+        <View style={globalStyle.marginBottom24}>
+          <Button title="Sign In" onPress={handleSignIn} isDisabled={false} />
+        </View>
+        {Platform.OS === 'android' ? (
+          <GoogleSigninButton
+            style={style.googleButton}
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={handleGoogleSignIn}
+          />
+        ) : (
+          <View style={globalStyle.marginBottom24}>
+            <Button
+              title="Future Apple Sign in Button"
+              onPress={() => console.log('Apple Sign in button pressed')}
+              isDisabled={false}
+            />
+          </View>
+        )}
+        <Pressable
+          style={style.signUpButton}
+          onPress={() => props.navigation.navigate('Signup')}>
+          <Title title="Don't have an account?" type={2} />
+        </Pressable>
+      </ScrollView>
     </SafeAreaView>
   );
 };

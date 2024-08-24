@@ -1,10 +1,5 @@
+import {User} from '@supabase/supabase-js';
 import React, {createContext, useState, useContext, ReactNode} from 'react';
-
-type User = {
-  id: string;
-  email: string;
-  // add other user properties as needed
-};
 
 type AppContextType = {
   user: User | null;
