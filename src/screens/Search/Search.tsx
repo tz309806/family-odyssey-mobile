@@ -1,12 +1,24 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native';
-import GeoapifySearchBoxComponent from '../../components/GeoapifySearchBoxComponent.tsx';
+import {createStackNavigator} from '@react-navigation/stack';
+import GeoapifySearchBoxComponent from '../../services/GeoapifyPlaces';
+import PlaceResultsScreen from '../PlaceResultsScreen/PlaceResultsScreen'; // Import the results screen
+
+const Stack = createStackNavigator();
 
 const Search = () => {
   return (
-    <SafeAreaView>
-      <GeoapifySearchBoxComponent />
-    </SafeAreaView>
+    <Stack.Navigator initialRouteName="GeoapifySearchBox">
+      <Stack.Screen
+        name="GeoapifySearchBox"
+        component={GeoapifySearchBoxComponent}
+        options={{headerShown: false}} // Hide the header if needed
+      />
+      <Stack.Screen
+        name="PlaceResultsScreen"
+        component={PlaceResultsScreen}
+        options={{title: 'Place Results'}}
+      />
+    </Stack.Navigator>
   );
 };
 

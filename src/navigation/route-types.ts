@@ -9,4 +9,5 @@ export type RootStackParamList = {
   TabNavigator: undefined;
   Signup: undefined;
   Tabs: undefined;
+  GeoapiPlacesResult: undefined;
 };

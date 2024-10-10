@@ -5,15 +5,18 @@ import Home from '../screens/Home/Home';
 import Signup from '../screens/Signup/Signup';
 import Search from '../screens/Search/Search';
 import Inbox from '../screens/Inbox/Inbox';
+import PlaceDetailsScreen from '../screens/Reviews/PlaceDetailsScreen.tsx'; // Import your screen here
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome, faSearch, faInbox} from '@fortawesome/free-solid-svg-icons';
 import Login from '../screens/Login/Login.tsx';
 import {NavigationContainer} from '@react-navigation/native';
 import {useAppContext} from '../AppContext';
+import PlaceResultsScreen from '../screens/PlaceResultsScreen/PlaceResultsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Tab Navigator for the Bottom Tabs
 const TabNavigator = () => {
   return (
     <Tab.Navigator>
@@ -26,7 +29,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Search"
-        component={Search}
+        component={Search} // Make sure Search is part of the stack
         options={{
           tabBarIcon: () => <FontAwesomeIcon icon={faSearch} />,
         }}
@@ -42,6 +45,7 @@ const TabNavigator = () => {
   );
 };
 
+// Stack Navigator for Auth (Login/Signup)
 const AuthStack = () => {
   const {setUser} = useAppContext();
 
@@ -55,8 +59,9 @@ const AuthStack = () => {
   );
 };
 
+// Main Root Navigator to handle the auth state and app navigation
 const RootNavigator = () => {
-  const {user, setUser} = useAppContext();
+  const {user} = useAppContext();
 
   return (
     <NavigationContainer>
@@ -65,9 +70,19 @@ const RootNavigator = () => {
           <Stack.Screen
             name="Tabs"
             component={TabNavigator}
-            options={{headerShown: false}}
+            options={{headerShown: false}} // Hide header for tabs
           />
-          <Stack.Screen name="Home" component={Home} />
+          {/* Adding PlaceDetailsScreen and other stack navigations */}
+          {/*<Stack.Screen*/}
+          {/*  name="PlaceDetailsScreen"*/}
+          {/*  component={PlaceDetailsScreen}*/}
+          {/*  options={{title: 'Place Details'}} // Optionally set header*/}
+          {/*/>*/}
+          {/*<Stack.Screen*/}
+          {/*  name="PlaceResultsScreen"*/}
+          {/*  component={PlaceResultsScreen}*/}
+          {/*  options={{title: 'Places Results', tabBarVisible: false}} // Hide bottom tabs*/}
+          {/*/>*/}
         </Stack.Navigator>
       ) : (
         <AuthStack />

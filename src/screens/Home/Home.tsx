@@ -45,7 +45,6 @@ const Home = () => {
     useCallback(() => {
       const logUserSession = async () => {
         const session = await getSession();
-        console.log('Logged in user:', user);
       };
 
       logUserSession();

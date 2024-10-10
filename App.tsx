@@ -11,7 +11,7 @@ import MapboxGL from '@rnmapbox/maps';
 const AppContent: React.FC = () => {
   const {setUser} = useAppContext();
   const [loading, setLoading] = useState(true);
-  const [coordinates] = useState([8.674252499999994, 9.0845755]);
+  // const [coordinates] = useState([8.674252499999994, 9.0845755]);
 
   useEffect(() => {
     // Configure Google Sign-In
@@ -20,7 +20,7 @@ const AppContent: React.FC = () => {
     });
 
     // Set Mapbox Access Token
-    MapboxGL.setAccessToken(process.env.MAPBOX_TOKEN); // Ensure the token is loaded correctly
+    // MapboxGL.setAccessToken(process.env.MAPBOX_TOKEN); // Ensure the token is loaded correctly
 
     const fetchUser = async () => {
       const currentUser = await checkUserSession();
