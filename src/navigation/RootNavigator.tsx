@@ -108,17 +108,6 @@ const RootNavigator = () => {
           />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Edit Profile" component={Profile} />
-          {/* Adding PlaceDetailsScreen and other stack navigations */}
-          {/*<Stack.Screen*/}
-          {/*  name="PlaceDetailsScreen"*/}
-          {/*  component={PlaceDetailsScreen}*/}
-          {/*  options={{title: 'Place Details'}} // Optionally set header*/}
-          {/*/>*/}
-          {/*<Stack.Screen*/}
-          {/*  name="PlaceResultsScreen"*/}
-          {/*  component={PlaceResultsScreen}*/}
-          {/*  options={{title: 'Places Results', tabBarVisible: false}} // Hide bottom tabs*/}
-          {/*/>*/}
         </Stack.Navigator>
       ) : (
         <AuthStack />

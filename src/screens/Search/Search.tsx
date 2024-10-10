@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import GeoapifySearchBoxComponent from '../../services/GeoapifyPlaces';
+import GeoapifySearchBoxComponent from '../../services/GeoapiFySearchBoxComponent.tsx';
 import PlaceResultsScreen from '../PlaceResultsScreen/PlaceResultsScreen'; // Import the results screen
 
 const Stack = createStackNavigator();

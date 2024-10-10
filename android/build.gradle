@@ -1,19 +1,5 @@
 buildscript {
     ext {
-        RNMapboxMapsImpl = "mapbox"
-        RNMapboxMapsVersion = '11.5.1'
-
-//        // Mapbox dependencies
-//        RNMapboxMapsLibs = {
-//            implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.7.1'
-//            implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:5.8.0'
-//            implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.8.0'
-//            implementation 'com.mapbox.mapboxsdk:mapbox-android-gestures:0.7.0'
-//            implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
-//            implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-localization-v9:0.14.0'
-//            implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v9:0.4.0'
-//        }
-
         buildToolsVersion = "34.0.0"
         minSdkVersion = 23
         compileSdkVersion = 34
