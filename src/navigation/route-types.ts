@@ -10,4 +10,6 @@ export type RootStackParamList = {
   Signup: undefined;
   Tabs: undefined;
   GeoapiPlacesResult: undefined;
+  Settings: undefined;
+  'Edit Profile': undefined;
 };

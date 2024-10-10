@@ -3,41 +3,28 @@ import 'react-native-url-polyfill/auto';
 import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import RootNavigator from './src/navigation/RootNavigator';
+import {supabase} from './src/supabaseClient.ts';
 import {checkUserSession, onAuthStateChange} from './src/services/authService';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {AppProvider, useAppContext} from './src/AppContext';
-import MapboxGL from '@rnmapbox/maps';
 
-const AppContent: React.FC = () => {
+const AppContent = () => {
   const {setUser} = useAppContext();
   const [loading, setLoading] = useState(true);
-  // const [coordinates] = useState([8.674252499999994, 9.0845755]);
 
   useEffect(() => {
-    // Configure Google Sign-In
-    GoogleSignin.configure({
-      webClientId: process.env.GOOGLE_CLIENT_ID, // Ensure this matches your configuration
-    });
-
-    // Set Mapbox Access Token
-    // MapboxGL.setAccessToken(process.env.MAPBOX_TOKEN); // Ensure the token is loaded correctly
-
-    const fetchUser = async () => {
-      const currentUser = await checkUserSession();
-      setUser(currentUser);
-      console.log('USER: ', currentUser);
+    supabase.auth.getSession().then(({data: {session}}) => {
+      if (session) {
+        setUser(session.user);
+      }
       setLoading(false);
-    };
-
-    fetchUser();
-
-    const {subscription} = onAuthStateChange(newUser => {
-      setUser(newUser);
     });
 
-    return () => {
-      subscription?.unsubscribe();
-    };
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setUser(session.user);
+      }
+    });
   }, []);
 
   if (loading) {
@@ -51,7 +38,7 @@ const AppContent: React.FC = () => {
   return <RootNavigator />;
 };
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <AppProvider>
       <AppContent />
