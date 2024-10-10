@@ -15,6 +15,8 @@ const AppContent = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({data: {session}}) => {
       if (session) {
+        console.log('session', session);
+
         setUser(session.user);
       }
       setLoading(false);

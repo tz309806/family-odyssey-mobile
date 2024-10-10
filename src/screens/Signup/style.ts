@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {scaleFontSize} from '../../assets/styles/scaling';
 
 const style = StyleSheet.create({
   container: {
@@ -16,6 +17,11 @@ const style = StyleSheet.create({
   text: {
     textAlign: 'center',
     marginVertical: 20,
+  },
+  error: {
+    fontFamily: 'Quicksand',
+    fontSize: scaleFontSize(16),
+    color: 'red',
   },
 });
 export default style;
