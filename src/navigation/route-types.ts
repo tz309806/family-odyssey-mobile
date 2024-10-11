@@ -9,6 +9,7 @@ export type RootStackParamList = {
   TabNavigator: undefined;
   Signup: undefined;
   Tabs: undefined;
+  GeoapiPlacesResult: undefined;
   Settings: undefined;
   'Edit Profile': undefined;
 };

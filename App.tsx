@@ -3,8 +3,10 @@ import 'react-native-url-polyfill/auto';
 import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import RootNavigator from './src/navigation/RootNavigator';
-import {AppProvider, useAppContext} from './src/AppContext.tsx';
 import {supabase} from './src/supabaseClient.ts';
+import {checkUserSession, onAuthStateChange} from './src/services/authService';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {AppProvider, useAppContext} from './src/AppContext';
 
 const AppContent = () => {
   const {setUser} = useAppContext();

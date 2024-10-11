@@ -5,6 +5,7 @@ import Home from '../screens/Home/Home';
 import Signup from '../screens/Signup/Signup';
 import Search from '../screens/Search/Search';
 import Inbox from '../screens/Inbox/Inbox';
+import PlaceDetailsScreen from '../screens/Reviews/PlaceDetailsScreen.tsx'; // Import your screen here
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
   faHome,
@@ -16,6 +17,7 @@ import {
 import Login from '../screens/Login/Login.tsx';
 import {NavigationContainer} from '@react-navigation/native';
 import {useAppContext} from '../AppContext';
+import PlaceResultsScreen from '../screens/PlaceResultsScreen/PlaceResultsScreen';
 import Profile from '../screens/Profile/Profile.tsx';
 import Settings from '../screens/Settings/Settings.tsx';
 import {View} from 'react-native';
@@ -23,6 +25,8 @@ import style from './style.ts';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+// Tab Navigator for the Bottom Tabs
 const HomeIcon = () => <FontAwesomeIcon icon={faHome} />;
 const SearchIcon = () => (
   <View style={style.searchIcon}>
@@ -51,7 +55,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Search"
-        component={Search}
+        component={Search} // Make sure Search is part of the stack
         options={{
           tabBarIcon: SearchIcon,
         }}
@@ -74,6 +78,7 @@ const TabNavigator = () => {
   );
 };
 
+// Stack Navigator for Auth (Login/Signup)
 const AuthStack = () => {
   const {setUser} = useAppContext();
 
@@ -87,6 +92,7 @@ const AuthStack = () => {
   );
 };
 
+// Main Root Navigator to handle the auth state and app navigation
 const RootNavigator = () => {
   const {user} = useAppContext();
   console.log('ROOT Nav', user);
@@ -98,7 +104,7 @@ const RootNavigator = () => {
           <Stack.Screen
             name="Tabs"
             component={TabNavigator}
-            options={{headerShown: false}}
+            options={{headerShown: false}} // Hide header for tabs
           />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Edit Profile" component={Profile} />
