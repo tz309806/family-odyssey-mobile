@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -6,22 +6,35 @@ import {
   View,
   Linking,
   TouchableOpacity,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import styles from './style';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Home = () => {
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const logUserSession = async () => {
-  //       const session = await getSession();
-  //       console.log('Logged in user:', user);
-  //     };
+  const handleBackButton = useCallback(() => {
+    Alert.alert('Hold on!', 'Are you sure you want to exit?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {text: 'YES', onPress: () => BackHandler.exitApp()},
+    ]);
+    return true;
+  }, []);
 
-  //     logUserSession();
-  //   }, []),
-  // );
+  useFocusEffect(
+    useCallback(() => {
+      BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    }, [handleBackButton]),
+  );
 
   const data = [
     {id: 1, text: 'https://google.com'},

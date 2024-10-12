@@ -8,11 +8,14 @@ apply plugin: "com.facebook.react"
  */
 react {
     /* Folders */
-    // root = file("../")
-    // reactNativeDir = file("../node_modules/react-native")
-    // codegenDir = file("../node_modules/@react-native/codegen")
-    // cliFile = file("../node_modules/react-native/cli.js")
-
+    //   The root of your project, i.e. where "package.json" lives. Default is '../..'
+    // root = file("../../")
+    //   The folder where the react-native NPM package is. Default is ../../node_modules/react-native
+    // reactNativeDir = file("../../node_modules/react-native")
+    //   The folder where the react-native Codegen package is. Default is ../../node_modules/@react-native/codegen
+    // codegenDir = file("../../node_modules/@react-native/codegen")
+    //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
+    // cliFile = file("../../node_modules/react-native/cli.js")
     /* Variants */
     // debuggableVariants = ["liteDebug", "prodDebug"]
 
@@ -27,6 +30,9 @@ react {
     /* Hermes Commands */
     // hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
     // hermesFlags = ["-O", "-output-source-map"]
+
+    /* Autolinking */
+    autolinkLibrariesWithApp()
 }
 
 def enableProguardInReleaseBuilds = false
@@ -79,5 +85,3 @@ dependencies {
 project.ext.react = [
         enableHermes: true,
 ]
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

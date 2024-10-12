@@ -67,17 +67,6 @@ const Login = (props: Props) => {
 
       if (error) setErrorMessage('Invalid email or password');
     }
-
-    // try {
-    //   const response = await signIn(email, password);
-    //   const session = response.data.session;
-    //   await storeSession(session);
-    //   console.log('handleSignIn session object', session);
-    //   props.setUser(session.user);
-    // } catch (error: any) {
-    //   setErrorMessage('Invalid email or password');
-    // }
-    //}
   };
 
   const handleGoogleSignIn = async () => {

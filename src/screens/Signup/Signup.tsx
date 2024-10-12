@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {SafeAreaView, TextInput, Button, Text, Alert} from 'react-native';
+import {SafeAreaView, TextInput, Button, Text} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/route-types.ts';
 import style from './style';
-import {signUp} from '../../services/authService';
+import {supabase} from '../../supabaseClient.ts';
+import globalStyle from '../../assets/styles/globalStyle.ts';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -20,23 +21,26 @@ const Signup = ({navigation}: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSignup = async () => {
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
-
-    try {
-      await signUp(email, password);
-      Alert.alert('Success', 'User registered successfully');
-      navigation.navigate('Home'); // Redirect to home or login screen
-    } catch (error) {
-      console.log('ERROR: ', error);
-      Alert.alert(
-        'Error',
-        error.response?.data?.error || 'Something went wrong',
-      );
+  const handleSignUp = async () => {
+    setErrorMessage('');
+    console.log(password);
+    if (email.length < 2) {
+      setErrorMessage('Invalid email');
+    } else if (password.length < 8) {
+      setErrorMessage('Password should be at least 8 characters');
+    } else if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match');
+    } else {
+      const {data, error} = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+      console.log('data', data);
+      if (error) {
+        setErrorMessage('Invalid email or password');
+      }
     }
   };
 
@@ -75,10 +79,15 @@ const Signup = ({navigation}: Props) => {
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
+      {errorMessage !== '' && (
+        <Text style={[style.error, globalStyle.marginBottom24]}>
+          {errorMessage}
+        </Text>
+      )}
       <Text style={style.text}>
         By signing up you agree to the terms of use and privacy policy
       </Text>
-      <Button title="Sign Up" onPress={handleSignup} />
+      <Button title="Sign Up" onPress={handleSignUp} />
     </SafeAreaView>
   );
 };
