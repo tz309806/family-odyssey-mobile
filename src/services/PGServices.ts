@@ -19,11 +19,9 @@ export const PG_getAddressByPlaceId = async (placeId: string) => {
 
     // Check if the response contains an empty array
     if (resp.data.length === 0) {
-      console.log('No address details found for placeId:', placeId);
       // You can return a specific value or handle it here, e.g., returning null or an empty object
       return resp; // or return resp.data if you want to return the empty array
     }
-    console.log('RETURNUING WITH RESULT')
     return resp; // Return the data from the response if it's not empty
   } catch (e) {
     console.error('Error fetching address and reviews:', e);
@@ -58,7 +56,6 @@ export const putAddressDetails = async addressDetails => {
   try {
     // Retrieve the current session's JWT token
     const {data: session} = await supabase.auth.getSession();
-    console.log('hhhhhhhh', session);
     const token = session?.session?.access_token;
 
     if (!token) {

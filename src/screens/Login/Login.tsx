@@ -84,7 +84,6 @@ const Login = (props: Props) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('GoogleSignin USERINFO:', userInfo);
 
       if (userInfo.idToken) {
 

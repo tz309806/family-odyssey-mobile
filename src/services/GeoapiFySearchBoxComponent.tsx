@@ -1,33 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import React, {useState, useEffect} from 'react';
+import {SafeAreaView, StyleSheet, Text, ActivityIndicator} from 'react-native';
+import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {useAppContext} from '../AppContext';
+import {normalize} from 'normalizr';
+import {placeSchema} from '../services/schemas';
 
 const geoapifyKey = process.env.GEOAPIFY_KEY;
 
 const categories = [
-  { label: 'Accommodation', value: 'accommodation' },
-  { label: 'Airport', value: 'airport' },
+  {label: 'Accommodation', value: 'accommodation'},
+  {label: 'Airport', value: 'airport'},
 ];
 
 const GeoapiFySearchBoxComponent = () => {
   const DEFAULT_COORDINATE = [-82.767064, 40.011767];
-  const [places, setPlaces] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false); // New state to track whether a search has been made
-  const navigation = useNavigation();
+  const [searched, setSearched] = useState(false);
+  const {setPlaces, places} = useAppContext(); // Access context to set places
+  const navigation = useNavigation(); // Access navigation
 
-  // Function to fetch places based on the selected category
-  const getGeoapifyPlaces = async (selectedCategory) => {
+  // Function to fetch and normalize places
+  const getGeoapifyPlaces = async selectedCategory => {
     setLoading(true);
-    setSearched(true); // Set searched to true when search begins
+    setSearched(true);
     try {
       const response = await axios.get('https://api.geoapify.com/v2/places', {
         params: {
@@ -39,56 +37,61 @@ const GeoapiFySearchBoxComponent = () => {
       });
 
       if (response.data && response.data.features) {
-        console.log('Places fetched:', response.data.features);
-        setPlaces(response.data.features);
-      } else {
-        setPlaces([]);
+        // Flatten properties and map place_id
+        const placesWithId = response.data.features.map(feature => ({
+          ...feature.properties, // Spread properties to the top level
+          geometry: feature.geometry, // Retain geometry if needed
+          place_id: feature.properties.place_id, // Ensure place_id is at the top level
+        }));
+
+        // Normalize the data
+        const normalizedData = normalize(placesWithId, [placeSchema]);
+
+        const placeIds = Object.keys(normalizedData.entities.places || {});
+        // console.log('Place IDs:', placeIds);
+
+        setPlaces(normalizedData); // Set places in the context
       }
     } catch (error) {
       console.error('Error fetching places:', error);
-      setPlaces([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle category selection
-  const handleCategorySelect = (item) => {
+  const handleCategorySelect = item => {
     setSelectedCategory(item.value);
-    getGeoapifyPlaces(item.value);
+    getGeoapifyPlaces(item.value); // Fetch places when category is selected
   };
 
-  // Navigate to the results screen automatically when places are loaded
+  // This effect runs when places are updated and navigates to PlaceResultsScreen if places are available
   useEffect(() => {
-    if (!loading && places.length > 0) {
-      navigation.navigate('PlaceResultsScreen', { places });
+    if (!loading && places && Object.keys(places).length > 0) {
+      navigation.navigate('PlaceResultsScreen'); // Navigate to PlaceResultsScreen when places are loaded
     }
-  }, [loading, places, navigation]);
+  }, [places, loading, navigation]);
 
   return (
-      <SafeAreaView style={styles.container}>
-        {/* Category dropdown */}
-        <Dropdown
-            data={categories}
-            labelField="label"
-            valueField="value"
-            placeholder="Select a Category"
-            value={selectedCategory}
-            onChange={handleCategorySelect}
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-        />
-
-        {/* Loading Indicator */}
-        {loading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-        ) : searched && places.length === 0 ? ( // Only show the message if a search has been made and no places found
-            <Text style={styles.noPlacesText}>
-              No places found. Please select a different category.
-            </Text>
-        ) : null}
-      </SafeAreaView>
+    <SafeAreaView style={styles.container}>
+      <Dropdown
+        data={categories}
+        labelField="label"
+        valueField="value"
+        placeholder="Select a Category"
+        value={selectedCategory}
+        onChange={handleCategorySelect}
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : searched && Object.keys(places).length === 0 ? (
+        <Text style={styles.noPlacesText}>
+          No places found. Please select a different category.
+        </Text>
+      ) : null}
+    </SafeAreaView>
   );
 };
 

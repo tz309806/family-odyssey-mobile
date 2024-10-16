@@ -57,6 +57,7 @@ const TabNavigator = () => {
         name="Search"
         component={Search} // Make sure Search is part of the stack
         options={{
+          headerShown: false, // Disable the parent header to avoid double headers
           tabBarIcon: SearchIcon,
         }}
       />
@@ -95,7 +96,6 @@ const AuthStack = () => {
 // Main Root Navigator to handle the auth state and app navigation
 const RootNavigator = () => {
   const {user} = useAppContext();
-  console.log('ROOT Nav', user);
 
   return (
     <NavigationContainer>

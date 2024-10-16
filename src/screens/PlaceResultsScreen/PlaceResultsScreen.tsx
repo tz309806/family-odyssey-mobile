@@ -1,36 +1,52 @@
+import React, {useState} from 'react';
 import {
-  FlatList,
   SafeAreaView,
-  StyleSheet,
+  FlatList,
   Text,
   TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import {useAppContext} from '../../AppContext'; // Import AppContext
+import {useNavigation} from '@react-navigation/native'; // Import navigation
 
-const PlaceResultsScreen = ({route}) => {
-  const {places} = route.params;
+const PlaceResultsScreen = () => {
+  const {places, placeIds} = useAppContext(); // Access places and placeIds from AppContext
+  const [loading, setLoading] = useState(false); // To show loading state
+  const navigation = useNavigation(); // Access navigation
 
-  const renderPlaceItem = ({item, index}) => (
-    <TouchableOpacity style={styles.placeItem}>
-      <Text style={styles.placeName}>
-        {item.properties.name || `Place ${index + 1}`}
-      </Text>
-      <Text>{item.properties.formatted || 'No address available'}</Text>
-    </TouchableOpacity>
-  );
+  // Function to handle navigation to PoiDetails when a place is clicked
+  const handlePlaceSelect = place => {
+    // Navigate to PoiDetails and pass the selected place data
+    navigation.navigate('PoiDetails', {place});
+  };
+
+  // Render individual place items
+  const renderPlaceItem = ({item}) => {
+    const place = places[item]; // Get the place object by its ID
+
+    return (
+      <TouchableOpacity
+        style={styles.placeItem}
+        onPress={() => handlePlaceSelect(place)} // Navigate to PoiDetails when item is clicked
+      >
+        <Text style={styles.placeName}>{place.name || `Place ${item}`}</Text>
+        <Text>{place.formatted || 'No address available'}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={places}
-        keyExtractor={(item, index) =>
-          item.properties.place_id || index.toString()
-        }
+        data={placeIds} // Iterate over placeIds
+        keyExtractor={item => item}
         renderItem={renderPlaceItem}
         ListEmptyComponent={
           <Text style={styles.noPlacesText}>No places found.</Text>
         }
       />
+      {loading && <ActivityIndicator size="large" color="#0000ff" />}
     </SafeAreaView>
   );
 };
