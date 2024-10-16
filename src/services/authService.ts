@@ -5,7 +5,6 @@ import {supabase} from '../supabaseClient';
 const API_URL = `${process.env.BACKEND_URL}/api/auth`;
 
 export const signUp = async (email: string, password: string) => {
-  console.log('backend url', process.env.BACKEND_URL);
   return await axios.post(`${API_URL}/signup`, {email, password});
 };
 
@@ -70,7 +69,6 @@ export const checkUserSession = async () => {
 export const onAuthStateChange = (callback: (user: any) => void) => {
   const {data: authListener} = supabase.auth.onAuthStateChange(
     (_event, session) => {
-      console.log('AUTH STATE CHANGE', session);
 
       callback(session?.user || null);
     },

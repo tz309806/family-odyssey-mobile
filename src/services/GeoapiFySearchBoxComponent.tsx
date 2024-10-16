@@ -48,7 +48,6 @@ const GeoapiFySearchBoxComponent = () => {
         const normalizedData = normalize(placesWithId, [placeSchema]);
 
         const placeIds = Object.keys(normalizedData.entities.places || {});
-        // console.log('Place IDs:', placeIds);
 
         setPlaces(normalizedData); // Set places in the context
       }
