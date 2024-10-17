@@ -8,10 +8,6 @@ const BACKEND_URL = `${process.env.BACKEND_URL}/api`;
 
 export const PG_getAddressByPlaceId = async (placeId: string) => {
   try {
-    console.log(
-      'in getAddressByPlaceId, URL is: ',
-      `${BACKEND_URL}/pg/get_address_by_place_id/${placeId}`,
-    );
 
     const resp = await axios.get(
       `${BACKEND_URL}/pg/get_address_by_place_id/${placeId}`,
@@ -19,11 +15,9 @@ export const PG_getAddressByPlaceId = async (placeId: string) => {
 
     // Check if the response contains an empty array
     if (resp.data.length === 0) {
-      console.log('No address details found for placeId:', placeId);
       // You can return a specific value or handle it here, e.g., returning null or an empty object
       return resp; // or return resp.data if you want to return the empty array
     }
-    console.log('RETURNUING WITH RESULT')
     return resp; // Return the data from the response if it's not empty
   } catch (e) {
     console.error('Error fetching address and reviews:', e);
@@ -53,12 +47,11 @@ export const PG_getReviewsByPlaceId = async (
   }
 };
 
+//not done with this method yet
 export const putAddressDetails = async addressDetails => {
-  console.log('in putAddressDetails');
   try {
     // Retrieve the current session's JWT token
     const {data: session} = await supabase.auth.getSession();
-    console.log('hhhhhhhh', session);
     const token = session?.session?.access_token;
 
     if (!token) {
@@ -79,9 +72,9 @@ export const putAddressDetails = async addressDetails => {
     );
 
     if (response.status === 200) {
-      console.log('Address details saved successfully:', response.data);
+      console.log('Address details saved successfully:');
     } else {
-      console.error('Failed to save address details:', response.status);
+      console.error('Failed to save address details:');
     }
   } catch (error) {
     console.error('Error saving address details:', error);

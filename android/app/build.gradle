@@ -85,3 +85,5 @@ dependencies {
 project.ext.react = [
         enableHermes: true,
 ]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"

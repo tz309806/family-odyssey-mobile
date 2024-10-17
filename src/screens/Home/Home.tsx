@@ -52,7 +52,6 @@ const Home = () => {
             <Text onPress={() => Linking.openURL(item.text)}>{item.text}</Text>
             <TouchableOpacity
               onPress={() => {
-                console.log('delete item');
               }}>
               <FontAwesomeIcon icon={faTrash} />
             </TouchableOpacity>

@@ -25,7 +25,6 @@ const Signup = ({navigation}: Props) => {
 
   const handleSignUp = async () => {
     setErrorMessage('');
-    console.log(password);
     if (email.length < 2) {
       setErrorMessage('Invalid email');
     } else if (password.length < 8) {
@@ -37,7 +36,6 @@ const Signup = ({navigation}: Props) => {
         email: email,
         password: password,
       });
-      console.log('data', data);
       if (error) {
         setErrorMessage('Invalid email or password');
       }

@@ -56,7 +56,6 @@ const Login = (props: Props) => {
 
   const handleSignIn = async () => {
     setErrorMessage('');
-    console.log(password);
     if (email.length < 2 || password.length < 8) {
       setErrorMessage('Invalid email or password');
     } else {
@@ -73,7 +72,6 @@ const Login = (props: Props) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('GoogleSignin USERINFO:', userInfo);
 
       if (userInfo.idToken) {
 
@@ -85,7 +83,6 @@ const Login = (props: Props) => {
           console.error('Supabase sign-in error:', error);
           throw new Error(error.message);
         }
-        console.log('handleGoogleSignIn Supabase User data:', data);
         await storeSession(data.session);
         props.setUser(data.session.user);
       } else {
